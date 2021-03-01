@@ -1,0 +1,29 @@
+datasource db {
+  url      = "postgresql://postgres:postgres@172.17.0.1:5432"
+  provider = "postgresql"
+}
+generator client {
+  provider      = "prisma-client-js"
+  binaryTargets = ["native"]
+}
+
+model users {
+	id Int @id
+	email_addr String
+  pwd String
+  name String
+  phone_num Int
+  addr String
+}
+
+model consult_record {
+	id Int @id
+  user_id Int
+  doctor_id Int
+  patient_id Int
+  medication_id Int
+  diagnosis_datail String
+  fee Int
+  datetime DateTime
+  follow_up Boolean
+}

@@ -1,0 +1,38 @@
+version: '3'
+
+services:
+  backend:
+    # env_file:
+    #     "./backend/backend.env"
+    image: node:alpine
+    working_dir: /backEnd
+    restart: always
+    volumes:
+      - ./backEnd/:/backEnd/
+    ports:
+      - "5000:5000"
+    command: ["npm", "start"]
+    # command: ["tail", "-f", "/dev/null"]
+  db:
+    image: postgres
+    restart: always
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_DB=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+  frontend:
+    image: node:alpine
+    working_dir: /frontend
+    restart: always
+    volumes:
+      - ./frontend/:/frontend/
+    ports:
+      - "19000:19000"
+      - "19002:19002"
+      - "19006:19006"
+    links:
+      - "backend"
+    command: ["npm", "run", "web"]
+    # command: ["tail", "-f", "/dev/null"]
