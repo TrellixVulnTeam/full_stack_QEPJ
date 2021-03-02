@@ -2,8 +2,9 @@
 // https://aboutreact.com/react-native-login-and-signup/
 
 // Import React and Component
-import React, {useState, useEffect} from 'react';
-import {View, Text, SafeAreaView} from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { StyleSheet, View, Text, SafeAreaView, ScrollView } from 'react-native';
+import { DataTable } from 'react-native-paper';
 
 import AsyncStorage from '@react-native-community/async-storage';
 
@@ -11,8 +12,9 @@ import axios from 'axios';
 const http = axios.create({ baseURL: 'http://localhost:5000/api', withCredentials: true })
 
 const HomeScreen = () => {
-  // const [user_id, setUser_id] = useState('');
-  // const [user_name, setUser_name] = useState('');
+  const [user_id, setUser_id] = useState('');
+  const [user_name, setUser_name] = useState('');
+  const [data, setData] = useState([]);
   // const [user_email, setUser_email] = useState('');
   // const [user_pwd, setUser_pwd] = useState('');
   useEffect(() => {
@@ -21,76 +23,65 @@ const HomeScreen = () => {
     // AsyncStorage.getItem('user_email').then((value) => setUser_email(value))
     // AsyncStorage.getItem('user_pwd').then((value) => setUser_pwd(value))
 
-    http.get('/clinicData').then(
+    http.get('/userData').then(
       response => response.data
     ).then((responseJson) => {
-      console.log("responseJson.data.length",responseJson.data.length)
-      if (responseJson.data.length >= 1) {
-        console.log("responseJson.data",responseJson.data);
-      } else {
-        console.log("responseJson.data",responseJson.data);
+      if (responseJson) {
+        setUser_id(responseJson.id);
+        setUser_name(responseJson.name);
       }
     }).catch(function (error) {
       console.log(error);
     });
 
-    // fetch('http://192.168.1.2:5000/clinicData', {
-    //   method: 'GET',
-    //   headers: {
-    //     'Accept': 'application/json',
-    //     'Content-Type': 'application/json'
-    //   },
-    //   credentials: 'same-origin'
-    // })
-    //   .then((response) => response.json())
-    //   .then((responseJson) => {
-    //     if (responseJson.data.length >= 1) {
-    //       console.log("responseJson.data",responseJson.data);
-    //     } else {
-    //       console.log("responseJson.data",responseJson.data);
-    //     }
-    //   })
-    //   .catch((error) => {
-    //     //Hide Loader
-    //     setLoading(false);
-    //     console.error(error);
-    //   });
-
+    http.get('/clinicData').then(
+      response => response.data
+    ).then((responseJson) => {
+      console.log("/clinicData", "responseJson", responseJson.data)
+      setData(responseJson.data)
+      // if (responseJson) {
+      //   setUser_id(responseJson.id);
+      //   setUser_name(responseJson.name);
+      // }
+    }).catch(function (error) {
+      console.log(error);
+    });
   }, []);
   return (
-    <SafeAreaView style={{flex: 1}}>
-      <View style={{flex: 1, padding: 16}}>
-        <View
-          style={{
-            flex: 1,
-            alignItems: 'center',
-            justifyContent: 'center',
-          }}>
-          <Text
-            style={{
-              fontSize: 20,
-              textAlign: 'center',
-              marginBottom: 16,
-            }}>
-            {/* Hello {user_name} [ID: {user_id}] */}
-            Hello World!!!
-          </Text>
+    <SafeAreaView style={{ flex: 1 }}>
+      <DataTable style={{ height: 1 }}>
+        <DataTable.Header>
+          <DataTable.Title numeric>User ID</DataTable.Title>
+          <DataTable.Title numeric>Doctor ID</DataTable.Title>
+          <DataTable.Title numeric>Patient ID</DataTable.Title>
+          <DataTable.Title numeric>Medication ID</DataTable.Title>
+          <DataTable.Title numeric>Diagnosis detail</DataTable.Title>
+        </DataTable.Header>
+        <View>
+          <ScrollView>
+            {
+              data && data.length > 0 ?
+                data.map((item, index) => {
+                  console.log("item.NAME",item.NAME)
+                  return (
+                    <DataTable.Row key={index}>
+                      <DataTable.Cell numeric>{item.user_id}</DataTable.Cell>
+                      <DataTable.Cell numeric>{item.doctor_id}</DataTable.Cell>
+                      <DataTable.Cell numeric>{item.patient_id}</DataTable.Cell>
+                      <DataTable.Cell numeric>{item.medication_id}</DataTable.Cell>
+                      <DataTable.Cell numeric>{item.diagnosis_detail}</DataTable.Cell>
+                    </DataTable.Row>
+                  );
+                })
+                :
+                false
+            }
+          </ScrollView>
         </View>
-        <Text
-          style={{
-            fontSize: 18,
-            textAlign: 'center',
-            color: 'grey',
-          }}>
-          Splash, Login and Register Example{'\n'}React Native
-        </Text>
-        <Text
-          style={{
-            fontSize: 16,
-            textAlign: 'center',
-            color: 'grey',
-          }}>
-          www.aboutreact.com
+      </DataTable>
+      <View style={{ flex: 1, padding: 16, justifyContent: 'flex-end', alignItems: 'center',color: 'grey' }}>
+        <Text>
+          User: {user_name}, ID: {user_id}
         </Text>
       </View>
     </SafeAreaView>

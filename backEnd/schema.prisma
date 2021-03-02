@@ -22,7 +22,7 @@ model consult_record {
   doctor_id Int
   patient_id Int
   medication_id Int
-  diagnosis_datail String
+  diagnosis_detail String
   fee Int
   datetime DateTime
   follow_up Boolean

@@ -12,5 +12,7 @@ router.post('/register', UserController.register);
 
 router.get('/test', SampleController.unprotected);
 router.get('/protected', customMdw.ensureAuthenticated, SampleController.protected);
+router.get('/userData', customMdw.ensureAuthenticated, SampleController.userData);
+router.get('/clinicData', customMdw.ensureAuthenticated, SampleController.clinicData);
 
 module.exports = router;
