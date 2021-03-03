@@ -16,7 +16,6 @@ const cors = require('cors');
 
 let app = express();
 
-/** config de estrategia local de passport ******/
 passport.use(new LocalStrategy({
     usernameField: "user_email",
     passwordField: "user_password",
@@ -34,7 +33,6 @@ passport.use(new LocalStrategy({
     .catch(err=>done(err, null)) // error en DB
 }));
 
-/** config de estrategia jwt de passport ******/
 let opts = {}
 // opts.jwtFromRequest = ExtractJwt.fromAuthHeaderAsBearerToken();
 var cookieExtractor = function(req) {
@@ -48,22 +46,17 @@ opts.algorithms = [process.env.JWT_ALGORITHM];
 
 passport.use(new JwtStrategy(opts, (jwt_payload, done)=>{
     console.log("ejecutando *callback verify* de estategia jwt");
-    // User.findOne({_id: jwt_payload.sub})
     User.users.findUnique({ where: { id: jwt_payload.sub } })
         .then(data=>{
-        if (data === null) { //no existe el usuario
-            //podríamos registrar el usuario
+        if (data === null) {
             return done(null, false);
         }
-        /*encontramos el usuario así que procedemos a devolverlo para
-        inyectarlo en req.user de la petición en curso*/
         else  
             return done(null, data);
         })
-        .catch(err=>done(err, null)) //si hay un error lo devolvemos
+        .catch(err=>done(err, null))
 }));
 
-//conectamos todos los middleware de terceros
 app.use(bodyParser.urlencoded({extended:false}));
 app.use(bodyParser.json());
 app.use(cookieParser());
@@ -72,10 +65,8 @@ app.use('/public', express.static(process.cwd() + '/public'));
 
 app.use(cors({ credentials: true, origin: 'http://localhost:19006' }));
 
-//conectamos todos los routers
 app.use('/api', user_routes);
 
-//el último nuestro middleware para manejar errores
 app.use(customMdw.errorHandler);
 app.use(customMdw.notFoundHandler);
 

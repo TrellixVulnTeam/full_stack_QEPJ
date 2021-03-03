@@ -14,7 +14,6 @@ let controller = {
         res.send({id:req.user.id, name:req.user.name});
     },
     clinicData: (req,res)=>{
-        // res.send({data:[{id:1, name:"chan tai man"}]});
         User.consult_record.findMany().then(data => {
             res.send(
                 {data:data}
