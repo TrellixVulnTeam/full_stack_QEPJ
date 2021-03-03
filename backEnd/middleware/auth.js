@@ -5,11 +5,11 @@ const error_types       = require('../api/error_types');
 let middlewares = {
     ensureAuthenticated: (req,res,next)=>{
         passport.authenticate('jwt', {session: false}, (err, user, info)=>{
-            if(info){ return next(new error_types.Error401(info.message)); }
+            if(info){ return next(new error_types.InfoError(info.message)); }
 
             if (err) { return next(err); }
 
-            if (!user) { return next(new error_types.Error403("You are not allowed to access.")); }
+            if (!user) { return next(new error_types.InfoError("You are not allowed to access.")); }
             
             req.user = user;
             next();

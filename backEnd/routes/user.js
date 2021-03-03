@@ -2,7 +2,7 @@
 
 const express             = require('express');
 const router              = express.Router();
-const tokenAuthentication = require('../middleware/custom');
+const tokenAuthentication = require('../middleware/auth');
 const privateApi          = require('../api/private')
 const publicApi           = require('../api/public')
 
