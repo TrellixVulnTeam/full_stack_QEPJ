@@ -1,4 +1,3 @@
 # React Native(Expo) & Nodejs
 
 Still in debvelopment
-lala
