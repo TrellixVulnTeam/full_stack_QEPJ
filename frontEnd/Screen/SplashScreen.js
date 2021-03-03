@@ -7,6 +7,9 @@ import {ActivityIndicator, View, StyleSheet, Image} from 'react-native';
 
 import AsyncStorage from '@react-native-community/async-storage';
 
+import axios from 'axios';
+const http = axios.create({ baseURL: 'http://localhost:5000/api', withCredentials: true })
+
 const SplashScreen = ({navigation}) => {
   //State for ActivityIndicator animation
   const [animating, setAnimating] = useState(true);
@@ -20,24 +23,36 @@ const SplashScreen = ({navigation}) => {
       // AsyncStorage.getItem('user_id').then((value) =>
       //   navigation.replace(value === null ? 'Auth' : 'DrawerNavigationRoutes'),
       // );
-      fetch('http://192.168.1.2:5000/api/protected', {
-        method: 'GET',
-        headers: {
-          'Accept': 'application/json',
-          'Content-Type': 'application/json'
-        }
-      })
-        .then((response) => response.json())
-        .then((responseJson) => {
-          //Hide Loader
-          console.log("responseJson",responseJson);
-          // If server response message same as Data Matched
-          navigation.replace(responseJson.result ? 'DrawerNavigationRoutes':'Auth' )
-        })
-        .catch((error) => {
-          //Hide Loader
-          console.error(error);
-        });
+
+      http.get('/protected').then(
+        response => response.data
+      ).then((responseJson) => {
+        console.log(responseJson);
+        // If server response message same as Data Matched
+        navigation.replace(responseJson.result ? 'DrawerNavigationRoutes':'Auth' )
+      }).catch(function (error) {
+        console.log(error);
+      });
+
+      // fetch('http://192.168.1.2:5000/api/protected', {
+      //   method: 'GET',
+      //   headers: {
+      //     'Accept': 'application/json',
+      //     'Content-Type': 'application/json'
+      //   }
+      // })
+      //   .then((response) => response.json())
+      //   .then((responseJson) => {
+      //     //Hide Loader
+      //     console.log("responseJson",responseJson);
+      //     // If server response message same as Data Matched
+      //     navigation.replace(responseJson.result ? 'DrawerNavigationRoutes':'Auth' )
+      //   })
+      //   .catch((error) => {
+      //     //Hide Loader
+      //     console.error(error);
+      //   });
+
     }, 1000);
   }, []);
 

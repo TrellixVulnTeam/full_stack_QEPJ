@@ -8,7 +8,7 @@ let controller = {
     },
     protected: (req,res)=>{
         console.log("caso protected");
-        res.send(`Ok ${req.user.name}, bienvenido a la ruta protegida.`);
+        res.send({result: true});
     },
     userData: (req,res)=>{
         res.send({id:req.user.id, name:req.user.name});

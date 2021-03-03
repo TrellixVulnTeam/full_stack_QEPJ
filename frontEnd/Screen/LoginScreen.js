@@ -97,6 +97,7 @@ const LoginScreen = ({navigation}) => {
         // AsyncStorage.setItem('user_email', responseJson.data[0].user_email);
         // AsyncStorage.setItem('user_pwd', responseJson.data[0].user_pwd);
         // console.log(responseJson.data[0].user_id);
+        // http.defaults.headers.common = {'Authorization': `Bearer ${responseJson.token}`}
         navigation.replace('DrawerNavigationRoutes');
       } else {
         setErrortext('Please check your email id or password');

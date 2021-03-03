@@ -63,9 +63,10 @@ let controller = {
                 /*solo inficamos el payload ya que el header ya lo crea la lib jsonwebtoken internamente
                 para el calculo de la firma y así obtener el token*/
                 const token = jwt.sign(JSON.stringify(payload), process.env.JWT_SECRET, {algorithm: process.env.JWT_ALGORITHM});
-                console.log("token",token)
+                // console.log("token",token)
                 res.cookie('jwt',token); // add cookie here
-                res.json({ result: true });
+                // res.json({ result: true, token: token });
+                res.json({ result: true});
             }
 
         })(req, res);
