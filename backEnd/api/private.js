@@ -1,11 +1,8 @@
 'use strict'
 
-const User = require('./../models/user');
+const User = require('../db');
 
 let controller = {
-    unprotected: (req,res)=>{
-        res.send("Ok. ruta sin proteger");
-    },
     protected: (req,res)=>{
         console.log("caso protected");
         res.send({result: true});

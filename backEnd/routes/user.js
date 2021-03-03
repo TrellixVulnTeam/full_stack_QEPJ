@@ -1,18 +1,17 @@
 'use strict'
 
-const express           = require('express');
+const express             = require('express');
 const router              = express.Router();
-const customMdw           = require('../middleware/custom');
-const SampleController    = require('../controllers/sample')
-const UserController      = require('../controllers/user')
+const tokenAuthentication = require('../middleware/custom');
+const privateApi          = require('../api/private')
+const publicApi           = require('../api/public')
 
 
-router.post('/login', UserController.login);
-router.post('/register', UserController.register);
+router.post('/login', publicApi.login);
+router.post('/register', publicApi.register);
 
-router.get('/test', SampleController.unprotected);
-router.get('/protected', customMdw.ensureAuthenticated, SampleController.protected);
-router.get('/userData', customMdw.ensureAuthenticated, SampleController.userData);
-router.get('/clinicData', customMdw.ensureAuthenticated, SampleController.clinicData);
+router.get('/protected', tokenAuthentication.ensureAuthenticated, privateApi.protected);
+router.get('/userData', tokenAuthentication.ensureAuthenticated, privateApi.userData);
+router.get('/clinicData', tokenAuthentication.ensureAuthenticated, privateApi.clinicData);
 
 module.exports = router;

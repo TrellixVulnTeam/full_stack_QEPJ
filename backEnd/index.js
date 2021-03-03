@@ -1,18 +1,18 @@
 'use strict';
 
 require('dotenv').config();
-const express           = require('express');
-const bodyParser        = require('body-parser');
-const passport          = require("passport");
-const JwtStrategy       = require('passport-jwt').Strategy;
-const LocalStrategy     = require('passport-local').Strategy;
-const ExtractJwt        = require('passport-jwt').ExtractJwt;
-const bcrypt            = require('bcryptjs');
-const user_routes       = require('./routes/user');
-const User              = require('./models/user');
-const customMdw         = require('./middleware/custom');
-const cookieParser      = require('cookie-parser');
-const cors = require('cors');
+const express             = require('express');
+const bodyParser          = require('body-parser');
+const passport            = require("passport");
+const JwtStrategy         = require('passport-jwt').Strategy;
+const LocalStrategy       = require('passport-local').Strategy;
+const ExtractJwt          = require('passport-jwt').ExtractJwt;
+const bcrypt              = require('bcryptjs');
+const user_routes         = require('./routes/user');
+const User                = require('./db');
+const tokenAuthentication = require('./middleware/custom');
+const cookieParser        = require('cookie-parser');
+const cors                = require('cors');
 
 let app = express();
 
@@ -21,16 +21,13 @@ passport.use(new LocalStrategy({
     passwordField: "user_password",
     session: false
 }, (username, password, done)=>{
-    console.log("ejecutando *callback verify* de estategia local");
-    // User.findOne({username:username})
-    // User.users.findUnique({ where: { id: 1 } })
     User.users.findFirst({ where: { email_addr: username } })
     .then(data=>{
-        if(data === null) return done(null, false); //el usuario no existe
-        else if(!bcrypt.compareSync(password, data.pwd)) { return done(null, false); } //no coincide la password
-        return done(null, data); //login ok
+        if(data === null) return done(null, false);
+        else if(!bcrypt.compareSync(password, data.pwd)) { return done(null, false); }
+        return done(null, data);
     })
-    .catch(err=>done(err, null)) // error en DB
+    .catch(err=>done(err, null))
 }));
 
 let opts = {}
@@ -45,7 +42,6 @@ opts.secretOrKey = process.env.JWT_SECRET;
 opts.algorithms = [process.env.JWT_ALGORITHM];
 
 passport.use(new JwtStrategy(opts, (jwt_payload, done)=>{
-    console.log("ejecutando *callback verify* de estategia jwt");
     User.users.findUnique({ where: { id: jwt_payload.sub } })
         .then(data=>{
         if (data === null) {
@@ -67,8 +63,8 @@ app.use(cors({ credentials: true, origin: 'http://localhost:19006' }));
 
 app.use('/api', user_routes);
 
-app.use(customMdw.errorHandler);
-app.use(customMdw.notFoundHandler);
+app.use(tokenAuthentication.errorHandler);
+app.use(tokenAuthentication.notFoundHandler);
 
 let port = process.env.PORT || 5000;
 app.listen(port, function () {

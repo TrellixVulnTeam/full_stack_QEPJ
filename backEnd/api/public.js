@@ -1,21 +1,19 @@
 'use strict'
 
-const User      = require('../models/user');
-const bcrypt    = require('bcryptjs');
-const passport  = require('passport');
-const jwt       = require('jsonwebtoken');
+const User        = require('../db');
+const bcrypt      = require('bcryptjs');
+const passport    = require('passport');
+const jwt         = require('jsonwebtoken');
 const error_types = require('./error_types');
 
 let controller = {
     register: (req, res, next) => {
-        console.log("caso register");
         User.users.findFirst({ where: { email_addr: req.body.username }})
             .then(data => {
                 if (data) {
                     throw new error_types.InfoError("user already exists");
                 }
                 else {
-                    console.log("creando usuario");
                     var hash = bcrypt.hashSync(req.body.password, parseInt(process.env.BCRYPT_ROUNDS));
                     let document = new User({
                         username: req.body.username,
@@ -36,7 +34,6 @@ let controller = {
             })
     },
     login: (req, res, next) => {
-        console.log("caso login");
         passport.authenticate("local", { session: false }, (error, user) => {
             if (error || !user) {
                 next(new error_types.Error404("username or password not correct."))
