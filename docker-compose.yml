@@ -2,8 +2,7 @@ version: '3'
 
 services:
   backend:
-    # env_file:
-    #     "./backend/backend.env"
+    env_file: "./.env"
     image: node:alpine
     working_dir: /backEnd
     restart: always
@@ -13,16 +12,8 @@ services:
       - "5000:5000"
     command: ["npm", "start"]
     # command: ["tail", "-f", "/dev/null"]
-  db:
-    image: postgres
-    restart: always
-    ports:
-      - "5432:5432"
-    environment:
-      - POSTGRES_DB=postgres
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=postgres
   frontend:
+    env_file: "./.env"
     image: node:alpine
     working_dir: /frontend
     restart: always
@@ -36,3 +27,12 @@ services:
       - "backend"
     command: ["npm", "run", "web"]
     # command: ["tail", "-f", "/dev/null"]
+  db:
+    image: postgres
+    restart: always
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_DB=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres

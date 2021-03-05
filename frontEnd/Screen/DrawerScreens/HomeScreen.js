@@ -10,7 +10,7 @@ import AsyncStorage from '@react-native-community/async-storage';
 
 import axios from 'axios';
 
-const http = axios.create({ baseURL: 'http://localhost:5000/api', withCredentials: true })
+const http = axios.create({ baseURL: process.env.backEndUrl, withCredentials: true })
 
 const HomeScreen = () => {
   const [user_id, setUser_id] = useState('');

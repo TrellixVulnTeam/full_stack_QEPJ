@@ -1,6 +1,6 @@
 'use strict'
 
-const User        = require('../db');
+const User        = require('../model');
 const bcrypt      = require('bcryptjs');
 const passport    = require('passport');
 const jwt         = require('jsonwebtoken');
@@ -48,6 +48,12 @@ let controller = {
                 res.json({ result: true});
             }
         })(req, res);
+    },
+    protected: (req,res)=>{
+        res.send({result: true});
+    },
+    userData: (req,res)=>{
+        res.send({id:req.user.id, name:req.user.name});
     }
 }
 

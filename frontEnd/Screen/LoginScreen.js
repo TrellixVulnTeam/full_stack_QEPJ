@@ -19,7 +19,7 @@ import AsyncStorage from '@react-native-community/async-storage';
 import Loader from './Components/Loader';
 
 import axios from 'axios';
-const http = axios.create({ baseURL: 'http://localhost:5000/api', withCredentials: true })
+const http = axios.create({ baseURL: process.env.backEndUrl, withCredentials: true })
 
 const LoginScreen = ({navigation}) => {
   const [userEmail, setUserEmail] = useState('');
