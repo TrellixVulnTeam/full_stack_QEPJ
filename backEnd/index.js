@@ -10,7 +10,7 @@ const ExtractJwt          = require('passport-jwt').ExtractJwt;
 const bcrypt              = require('bcryptjs');
 const user_routes         = require('./routes/user');
 const User                = require('./db');
-const tokenAuthentication = require('./middleware/custom');
+const tokenAuthentication = require('./middleware/auth');
 const cookieParser        = require('cookie-parser');
 const cors                = require('cors');
 

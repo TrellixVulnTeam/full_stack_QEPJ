@@ -47,11 +47,8 @@ let controller = {
                 res.cookie('jwt',token);
                 res.json({ result: true});
             }
-
         })(req, res);
     }
-
-
 }
 
 module.exports = controller;
